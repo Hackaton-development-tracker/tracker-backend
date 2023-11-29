@@ -9,3 +9,4 @@ python-dotenv==1.0.0
 pytz==2023.3.post1
 split-settings==1.0.0
 sqlparse==0.4.4
+djoser==2.2.2

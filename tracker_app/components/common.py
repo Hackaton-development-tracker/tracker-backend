@@ -36,3 +36,25 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+DJOSER = {
+    "LOGIN_FIELD": "email",
+    "HIDE_USERS": False,
+    "SERIALIZERS": {
+        "user": 'djoser.serializers.UserSerializer',
+        "current_user": 'djoser.serializers.UserSerializer',
+        "user_create": 'djoser.serializers.UserCreateSerializer',
+    },
+}
+
+AUTH_USER_MODEL = 'users.User'
