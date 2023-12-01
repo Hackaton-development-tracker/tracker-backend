@@ -48,6 +48,26 @@ class User(AbstractUser):
     )
     first_name = models.CharField('Имя', max_length=150, blank=False)
     last_name = models.CharField('Фамилия', max_length=150, blank=False)
+    skills = models.ManyToManyField(
+        'career_toolbox.Skill',
+        related_name='user_skills',
+        verbose_name='Навыки пользователя'
+    )
+    grades = models.ManyToManyField(
+        'career_toolbox.Grade',
+        related_name='user_grades',
+        verbose_name='Грейды пользователя'
+    )
+    specializations = models.ManyToManyField(
+        'career_toolbox.Specialization',
+        related_name='user_specializations',
+        verbose_name='Специализации пользователя'
+    )
+    last_evaluation_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name='Дата последней оценки'
+    )
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
