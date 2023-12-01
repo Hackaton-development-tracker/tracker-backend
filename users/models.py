@@ -48,16 +48,6 @@ class User(AbstractUser):
     )
     first_name = models.CharField('Имя', max_length=150, blank=False)
     last_name = models.CharField('Фамилия', max_length=150, blank=False)
-    projects = models.ManyToManyField(
-        'career_toolbox.Project',
-        verbose_name='Проекты пользователя',
-        related_name='user_projects'
-    )
-    courses = models.ManyToManyField(
-        'career_toolbox.Course',
-        verbose_name='Курсы пользователя',
-        related_name='user_courses'
-    )
     skills = models.ManyToManyField(
         'career_toolbox.Skill',
         related_name='user_skills',

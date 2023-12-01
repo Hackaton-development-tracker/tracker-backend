@@ -32,11 +32,6 @@ class Project(models.Model):
         verbose_name='Специализации',
         related_name='project_specializtion'
     )
-    users = models.ManyToManyField(
-        'users.User',
-        verbose_name='Пользователи',
-        related_name='projects_user'
-    )
 
     class Meta:
         verbose_name = 'Проект'
@@ -113,12 +108,6 @@ class Course(models.Model):
         verbose_name='Грейды',
         related_name='course_grade'
     )
-    users = models.ForeignKey(
-        'users.User',
-        on_delete=models.CASCADE,
-        verbose_name='Пользователи',
-        related_name='courses_user'
-    )
 
     class Meta:
         verbose_name = 'Курс'
@@ -142,17 +131,24 @@ class Specialization(models.Model):
         'career_toolbox.Grade',
         on_delete=models.CASCADE,
         verbose_name='Грейды',
-        related_name='courses_grade'
+        related_name='specialization_grade'
     )
     skills = models.ManyToManyField(
         'career_toolbox.Skill',
         verbose_name='Навыки по специализациям',
-        related_name='specialization_skulls'
+        related_name='specialization_skills'
     )
     users = models.ManyToManyField(
         'users.User',
         related_name='specializations_users',
         verbose_name='Специализации пользователей'
+    )
+    knowledgebase = models.ForeignKey(
+        'career_toolbox.KnowledgeBase',
+        on_delete=models.SET_NULL,
+        verbose_name='База знаний по специальности',
+        related_name='specialization_base',
+        null=True
     )
 
     class Meta:
@@ -200,6 +196,8 @@ class Grade(models.Model):
 
 
 class Skill(models.Model):
+    """Таблица с навыками."""
+
     title = models.CharField(
         max_length=255,
         verbose_name='Название навыка'
@@ -209,7 +207,7 @@ class Skill(models.Model):
     )
     specializations = models.ManyToManyField(
         'career_toolbox.Specialization',
-        verbose_name='Специальности',
+        verbose_name='Навыки по специальностям',
         related_name='skill_specializations'
     )
     resources = models.ForeignKey(
@@ -220,27 +218,38 @@ class Skill(models.Model):
     )
     level = models.CharField(
         max_length=255,
-        verbose_name='Уровень'
+        verbose_name='Уровень навыка'
     )
     rating = models.IntegerField(
-        verbose_name='Оценка'
+        verbose_name='Оценка навыка'
     )
     tests = models.OneToOneField(
         'quiz.Test',
         on_delete=models.SET_NULL,
-        verbose_name='Тесты по специализации',
+        verbose_name='Тесты по навыкам специализации',
         related_name='skill_test',
         null=True
     )
     users = models.ManyToManyField(
         'users.User',
         related_name='skill_users',
-        verbose_name='Специализации пользователей'
+        verbose_name='Навыки пользователей'
     )
 
     class Meta:
         verbose_name = 'Навык'
         verbose_name_plural = 'Навыки'
+
+    def __str__(self):
+        return self.title
+
+
+class KnowledgeBase(models.Model):
+    pass
+
+    class Meta:
+        verbose_name = 'База знаний'
+        verbose_name_plural = 'Базы знаний'
 
     def __str__(self):
         return self.title
