@@ -131,24 +131,27 @@ class Specialization(models.Model):
         'career_toolbox.Grade',
         on_delete=models.CASCADE,
         verbose_name='Грейды',
-        related_name='specialization_grade'
+        related_name='specialization_grade',
+        null=True, blank=True
     )
     skills = models.ManyToManyField(
         'career_toolbox.Skill',
         verbose_name='Навыки по специализациям',
-        related_name='specialization_skills'
+        related_name='specialization_skills',
+        null=True, blank=True
     )
     users = models.ManyToManyField(
         'users.User',
         related_name='specializations_users',
-        verbose_name='Специализации пользователей'
+        verbose_name='Специализации пользователей',
+        null=True, blank=True
     )
     knowledgebase = models.ForeignKey(
         'career_toolbox.KnowledgeBase',
         on_delete=models.SET_NULL,
         verbose_name='База знаний по специальности',
         related_name='specialization_base',
-        null=True
+        null=True, blank=True
     )
 
     class Meta:
