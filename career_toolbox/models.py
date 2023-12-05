@@ -235,6 +235,11 @@ class Skill(models.Model):
         related_name='skill_users',
         verbose_name='Навыки пользователей'
     )
+    base = models.ManyToManyField(
+        'career_toolbox.KnowledgeBase',
+        related_name='skill_knowledgebase',
+        verbose_name='Документы из базы знаний',
+    )
 
     class Meta:
         verbose_name = 'Навык'
@@ -245,11 +250,28 @@ class Skill(models.Model):
 
 
 class KnowledgeBase(models.Model):
-    pass
+    """Таблица с базой знаний."""
+
+    theme = models.CharField(
+        max_length=255,
+        verbose_name='Тема'
+    )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
+    author = models.CharField(
+        max_length=255,
+        verbose_name='Автор',
+    )
+    skills = models.ManyToManyField(
+        'career_toolbox.Skill',
+        related_name='knowledgebase_skills',
+        verbose_name='База по навыкам',
+    )
 
     class Meta:
         verbose_name = 'База знаний'
         verbose_name_plural = 'Базы знаний'
 
     def __str__(self):
-        return self.title
+        return self.theme
