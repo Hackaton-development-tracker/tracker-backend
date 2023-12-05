@@ -6,7 +6,7 @@ INSTALLED_APPS += (
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-
+    'drf_yasg',
     'api.apps.ApiConfig',
     'career_toolbox.apps.CareerToolboxConfig',
     'users.apps.UsersConfig',
