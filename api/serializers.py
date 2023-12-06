@@ -1,17 +1,21 @@
-from rest_framework import serializers
-from djoser.serializers import UserCreateSerializer, UserSerializer
-
 from career_toolbox.models import Specialization
+from djoser.serializers import UserCreateSerializer, UserSerializer
+from rest_framework import serializers
+
 from users.models import User
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
+    """Сериализатор специальностей."""
+
     class Meta:
         model = Specialization
-        fields = '__all__'
+        fields = ('id', 'title')
 
 
 class CustomUserSerializer(UserSerializer):
+    """Cериализатор для получения юзера."""
+
     class Meta:
         model = User
         fields = ('id', 'email', 'username', 'first_name', 'last_name')

@@ -27,7 +27,7 @@
 
 ### Технологии
 
-[**Backend**](https://github.com/JustLight1/certificates-and-commendations/tree/main/backend)
+[**Backend**](https://github.com/Hackaton-development-tracker/tracker-backend)
 
 * Python 3.9.10
 * Django 4.2
