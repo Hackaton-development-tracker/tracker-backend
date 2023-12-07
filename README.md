@@ -46,6 +46,68 @@
 - аутентификация Djoser
 - документация drf-yasg
 
+### Запуск проекта:
+
+1. Клонировать проект на машину одним из способов:
+> SSH
+> ```
+> git clone git@github.com:Hackaton-development-tracker/tracker-backend.git
+> ```
+
+> HTTPS
+> ```
+> git clone https://github.com/Hackaton-development-tracker/tracker-backend.git
+> ```
+
+> GitHub CLI
+> ```
+> git clone gh repo clone Hackaton-development-tracker/tracker-backend
+> ```
+#### Боевой режим (PostgtreSQL):
+1. В корневой дирректории создать файл с переменными окружения `.env` и наполнить его по шаблону:
+```
+DB_NAME=tracker_db
+DB_USER=admin
+DB_PASSWORD=admin
+DB_PORT=5432
+ENVIRONMENT=production
+```
+2. Из корневой дирректории запустить сборку приложения:
+```bash
+sudo docker-compose up -d --build
+```
+3. Создать учетную запись администратора
+```bash
+sudo docker-compose exec app python manage.py createsuperuser
+```
+4. Сервис будет доступен по адресу `http://<ip remote server>:8000/admin/`
+
+#### Режим тестирования (SQLite):
+1. В корневой дирректории создать файл с переменными окружения `.env` и наполнить его по шаблону:
+```
+DB_NAME=tracker_db
+DB_USER=admin
+DB_PASSWORD=admin
+DB_PORT=5432
+ENVIRONMENT=testing
+```
+2. Из корневой дирректории с файлом Dockerfile запустить сборку образа Docker:
+> <span style="color:#1E90FF">**Note:**</span> <span style="color:#FFFF00">**В режиме тестирования сборка ведется на основе Dockerfile.testing без поддержки psycopg2 для PostgreSQL**</span>
+```bash
+sudo docker build -t <app name> -f Dockerfile.testing . 
+```
+1. Запустить контейнер с приложением командой:
+```bash
+sudo docker run -p 8000:8000 -d --name <container name> <image name> 
+```
+1. Сервис будет доступен по адресу `http://localhost:8000/admin/`
+
+### Документация
+
+Доступна после запуска сервиса:
+
+**swagger** - `http://localhost:8000/swagger/`  
+**redoc** - `http://localhost:8000/redoc/`
 
 ## Сервис разрабатывали:
 <details>
