@@ -1,11 +1,15 @@
-from career_toolbox.models import Specialization
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from api.serializers import CustomUserSerializer, SpecializationSerializer
+from api.serializers import (CustomUserSerializer, SpecializationSerializer,
+                             GradeSerializer, AnswerSerializer, TestSerializer,
+                             QuestionSerializer, SkillSerializer,
+                             SpecializationDetailSerializer)
 from users.models import User
+from career_toolbox.models import (Specialization, Grade, Skill)
+from quiz.models import (Test, Question, Answer)
 
 
 class CustomUserViewSet(UserViewSet):
@@ -28,3 +32,7 @@ class SpecializationViewSet(viewsets.ModelViewSet):
         user.save()
         serializer = CustomUserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TestViewSet(viewsets.ModelViewSet):
+    pass
