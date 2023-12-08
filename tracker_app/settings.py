@@ -26,3 +26,5 @@ include('components/localization.py')
 
 # Auth password validation
 include('components/auth_pass_validators.py')
+
+CORS_ORIGIN_ALLOW_ALL = True
