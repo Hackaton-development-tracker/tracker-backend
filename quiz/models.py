@@ -5,7 +5,7 @@ class QuestionTest(models.Model):
     question = models.TextField(
         verbose_name='Вопрос'
     )
-    skills = models.OneToOneField(
+    skills = models.ForeignKey(
         'career_toolbox.Skill',
         on_delete=models.SET_NULL,
         verbose_name='Навык для тестирования',
@@ -22,7 +22,6 @@ class QuestionTest(models.Model):
 
 
 class AnswerTest(models.Model):
-
     class PointsAnswerChoices(models.TextChoices):
         Variant_1 = 'V1', '0'
         Variant_2 = 'V2', '3'
@@ -39,18 +38,6 @@ class AnswerTest(models.Model):
     answer = models.TextField(
         verbose_name='Ответ'
     )
-    specializtion = models.OneToOneField(
-        'career_toolbox.Specialization',
-        on_delete=models.CASCADE,
-        verbose_name='Связанная специализация',
-        related_name='answertest_specialization'
-    )
-    grade = models.ForeignKey(
-        'career_toolbox.Grade',
-        on_delete=models.CASCADE,
-        verbose_name='Связанный грейд',
-        related_name='answertest_grade'
-    )
     point_answer = models.CharField(
         max_length=3,
         verbose_name='Баллы за ответ',
@@ -61,6 +48,9 @@ class AnswerTest(models.Model):
     class Meta:
         verbose_name = 'Ответ'
         verbose_name_plural = 'Ответы'
+
+    def get_float_point_answer(self):
+        return float(dict(self.PointsAnswerChoices.choices)[self.point_answer])
 
     def __str__(self):
         return self.answer

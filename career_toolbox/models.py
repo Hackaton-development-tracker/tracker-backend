@@ -119,11 +119,6 @@ class Specialization(models.Model):
     description = models.TextField(
         verbose_name='Описание специальности'
     )
-    grades = models.ManyToManyField(
-        'career_toolbox.Grade',
-        verbose_name='Грейды',
-        related_name='specialization_grade',
-    )
     skills = models.ManyToManyField(
         'career_toolbox.Skill',
         verbose_name='Навыки по специализациям',
@@ -168,6 +163,7 @@ class Grade(models.Model):
         return self.title
 
 
+
 class Skill(models.Model):
     """Таблица с навыками."""
 
@@ -185,20 +181,11 @@ class Skill(models.Model):
         null=True,
         blank=True
     )
-    level = models.CharField(
-        max_length=255,
-        verbose_name='Уровень навыка'
-    )
-    rating = models.IntegerField(
-        verbose_name='Оценка навыка'
-    )
-    tests = models.OneToOneField(
+    tests = models.ManyToManyField(
         'quiz.QuestionTest',
-        on_delete=models.SET_NULL,
         verbose_name='Тесты по навыкам специализации',
         related_name='skill_test',
-        blank=True,
-        null=True
+        blank=True
     )
     base = models.ManyToManyField(
         'career_toolbox.KnowledgeBase',

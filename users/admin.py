@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User
+from .models import User, UserSkill
 
 
 class CustomUserAdmin(admin.ModelAdmin):
@@ -13,4 +13,9 @@ class CustomUserAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 
+class UserSkillAdmin(admin.ModelAdmin):
+    list_display = ('skill', 'level')
+
+
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(UserSkill, UserSkillAdmin)

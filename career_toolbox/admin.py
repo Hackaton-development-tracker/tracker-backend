@@ -19,7 +19,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 class SpecializationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description')
+    list_display = ('id', 'title', 'description')
     search_fields = ('title',)
 
 
@@ -36,6 +36,7 @@ class SkillAdmin(admin.ModelAdmin):
 class KnowledgeBaseAdmin(admin.ModelAdmin):
     list_display = ('theme', 'description', 'author')
     search_fields = ('theme',)
+
 
 
 model_admin_mapping = {

@@ -1,8 +1,9 @@
-from career_toolbox.models import Specialization
+from career_toolbox.models import *
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
 from users.models import User
+from quiz.models import *
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -15,21 +16,32 @@ class SpecializationSerializer(serializers.ModelSerializer):
 
 class CustomUserSerializer(UserSerializer):
     """Cериализатор для получения юзера."""
+    specializations = SpecializationSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'username', 'first_name', 'last_name')
+        fields = ('id', 'email', 'specializations')
 
 
-class CustomUserCreateSerializer(UserCreateSerializer):
-    """Сериализатор регистрации юзеров."""
-    email = serializers.EmailField(
-        required=True, max_length=254)
-    first_name = serializers.CharField(
-        required=True, max_length=150)
-    last_name = serializers.CharField(
-        required=True, max_length=150)
+
+class SkillSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Skill
+        fields = '__all__'
+
+
+class AnswerTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnswerTest
+        fields = ['id', 'answer']
+
+class QuestionTestSerializer(serializers.ModelSerializer):
+    answers = AnswerTestSerializer(many=True, source='answertest_questions', read_only=True)
 
     class Meta:
-        model = User
-        fields = ('id', 'email', 'first_name', 'last_name')
+        model = QuestionTest
+        fields = ['id', 'question', 'answers']
+
+
+class TakeTestSerializer(serializers.Serializer):
+    answers = AnswerTestSerializer(many=True)
