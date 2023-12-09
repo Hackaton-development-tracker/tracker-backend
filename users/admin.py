@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import User, UserSkill
 
 
+@admin.register(User)
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = (
         'id',
@@ -13,9 +14,6 @@ class CustomUserAdmin(admin.ModelAdmin):
     ordering = ('id',)
 
 
+@admin.register(UserSkill)
 class UserSkillAdmin(admin.ModelAdmin):
     list_display = ('skill', 'level')
-
-
-admin.site.register(User, CustomUserAdmin)
-admin.site.register(UserSkill, UserSkillAdmin)

@@ -163,7 +163,6 @@ class Grade(models.Model):
         return self.title
 
 
-
 class Skill(models.Model):
     """Таблица с навыками."""
 

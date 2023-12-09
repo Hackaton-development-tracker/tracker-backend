@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from . import models
 
 
@@ -36,7 +37,6 @@ class SkillAdmin(admin.ModelAdmin):
 class KnowledgeBaseAdmin(admin.ModelAdmin):
     list_display = ('theme', 'description', 'author')
     search_fields = ('theme',)
-
 
 
 model_admin_mapping = {
