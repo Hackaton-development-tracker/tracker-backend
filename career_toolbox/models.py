@@ -23,12 +23,11 @@ class Project(models.Model):
         'career_toolbox.ExternalResource',
         on_delete=models.CASCADE,
         verbose_name='Ссылки на внешние ресурсы',
-        related_name='resourse_projects'
+        related_name='resourse_projects',
+        blank=True
     )
-    specializations = models.ForeignKey(
+    specializations = models.ManyToManyField(
         'career_toolbox.Specialization',
-        on_delete=models.SET_NULL,
-        null=True,
         verbose_name='Специализации',
         related_name='project_specializtion'
     )
@@ -53,15 +52,6 @@ class ExternalResource(models.Model):
     )
     url = models.URLField(
         verbose_name='URL ресурса'
-    )
-    courses = models.ManyToManyField(
-        'career_toolbox.Course',
-        verbose_name='Курсы пользователей, размещенные на ресурсе'
-    )
-    projects = models.ManyToManyField(
-        'career_toolbox.Project',
-        verbose_name='Проекты, связанные с ресурсом',
-        related_name='projects_resourse'
     )
 
     class Meta:
@@ -90,11 +80,6 @@ class Course(models.Model):
         null=True,
         blank=True
     )
-    external_resources = models.ForeignKey(
-        'career_toolbox.ExternalResource',
-        on_delete=models.CASCADE,
-        verbose_name='Ссылки на внешние ресурсы'
-    )
     specializations = models.ForeignKey(
         'career_toolbox.Specialization',
         on_delete=models.SET_NULL,
@@ -107,6 +92,13 @@ class Course(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Грейды',
         related_name='course_grade'
+    )
+    resource = models.ForeignKey(
+        'career_toolbox.ExternalResource',
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Внешний ресурс где размещен курс',
+        blank=True
     )
 
     class Meta:
@@ -127,28 +119,23 @@ class Specialization(models.Model):
     description = models.TextField(
         verbose_name='Описание специальности'
     )
-    grades = models.ForeignKey(
+    grades = models.ManyToManyField(
         'career_toolbox.Grade',
-        on_delete=models.CASCADE,
         verbose_name='Грейды',
-        related_name='specialization_grade'
+        related_name='specialization_grade',
     )
     skills = models.ManyToManyField(
         'career_toolbox.Skill',
         verbose_name='Навыки по специализациям',
         related_name='specialization_skills'
     )
-    users = models.ManyToManyField(
-        'users.User',
-        related_name='specializations_users',
-        verbose_name='Специализации пользователей'
-    )
     knowledgebase = models.ForeignKey(
         'career_toolbox.KnowledgeBase',
         on_delete=models.SET_NULL,
         verbose_name='База знаний по специальности',
         related_name='specialization_base',
-        null=True
+        null=True,
+        blank=True
     )
 
     class Meta:
@@ -166,25 +153,11 @@ class Grade(models.Model):
         max_length=255,
         verbose_name='Название грейда'
     )
+    description = models.TextField(
+        verbose_name='Описание'
+    )
     point = models.IntegerField(
         verbose_name='Балл'
-    )
-    specializations = models.ForeignKey(
-        'career_toolbox.Specialization',
-        on_delete=models.CASCADE,
-        verbose_name='Специальности',
-        related_name='grade_specialization'
-    )
-    сourses = models.ForeignKey(
-        'career_toolbox.Course',
-        on_delete=models.CASCADE,
-        verbose_name='Курсы',
-        related_name='grade_course'
-    )
-    users = models.ManyToManyField(
-        'users.User',
-        verbose_name='Грейды пользователей',
-        related_name='grade_users'
     )
 
     class Meta:
@@ -205,16 +178,12 @@ class Skill(models.Model):
     description = models.TextField(
         verbose_name='Описание навыка'
     )
-    specializations = models.ManyToManyField(
-        'career_toolbox.Specialization',
-        verbose_name='Навыки по специальностям',
-        related_name='skill_specializations'
-    )
     resources = models.ForeignKey(
         'career_toolbox.ExternalResource',
         on_delete=models.CASCADE,
         verbose_name='Ссылки на внешние ресурсы',
-        null=True
+        null=True,
+        blank=True
     )
     level = models.CharField(
         max_length=255,
@@ -224,21 +193,18 @@ class Skill(models.Model):
         verbose_name='Оценка навыка'
     )
     tests = models.OneToOneField(
-        'quiz.Test',
+        'quiz.QuestionTest',
         on_delete=models.SET_NULL,
         verbose_name='Тесты по навыкам специализации',
         related_name='skill_test',
+        blank=True,
         null=True
-    )
-    users = models.ManyToManyField(
-        'users.User',
-        related_name='skill_users',
-        verbose_name='Навыки пользователей'
     )
     base = models.ManyToManyField(
         'career_toolbox.KnowledgeBase',
         related_name='skill_knowledgebase',
         verbose_name='Документы из базы знаний',
+        blank=True
     )
 
     class Meta:

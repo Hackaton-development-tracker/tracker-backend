@@ -63,6 +63,11 @@ class User(AbstractUser):
         related_name='user_specializations',
         verbose_name='Специализации пользователя'
     )
+    course = models.ManyToManyField(
+        'career_toolbox.Course',
+        related_name='user_course',
+        verbose_name='Курсы пользователя'
+    )
     last_evaluation_date = models.DateField(
         null=True,
         blank=True,
