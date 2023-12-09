@@ -1,9 +1,9 @@
-from career_toolbox.models import *
-from djoser.serializers import UserCreateSerializer, UserSerializer
+from djoser.serializers import UserSerializer
 from rest_framework import serializers
 
+from career_toolbox.models import Skill, Specialization
+from quiz.models import AnswerTest, QuestionTest
 from users.models import User
-from quiz.models import *
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -23,7 +23,6 @@ class CustomUserSerializer(UserSerializer):
         fields = ('id', 'email', 'specializations')
 
 
-
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skill
@@ -35,8 +34,10 @@ class AnswerTestSerializer(serializers.ModelSerializer):
         model = AnswerTest
         fields = ['id', 'answer']
 
+
 class QuestionTestSerializer(serializers.ModelSerializer):
-    answers = AnswerTestSerializer(many=True, source='answertest_questions', read_only=True)
+    answers = AnswerTestSerializer(many=True, source='answertest_questions',
+                                   read_only=True)
 
     class Meta:
         model = QuestionTest
