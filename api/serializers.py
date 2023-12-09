@@ -16,24 +16,11 @@ class SpecializationSerializer(serializers.ModelSerializer):
 
 class CustomUserSerializer(UserSerializer):
     """Cериализатор для получения юзера."""
+    specializations = SpecializationSerializer(many=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'username', 'first_name', 'last_name')
-
-
-class CustomUserCreateSerializer(UserCreateSerializer):
-    """Сериализатор регистрации юзеров."""
-    email = serializers.EmailField(
-        required=True, max_length=254)
-    first_name = serializers.CharField(
-        required=True, max_length=150)
-    last_name = serializers.CharField(
-        required=True, max_length=150)
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'first_name', 'last_name')
+        fields = ('id', 'email', 'specializations')
 
 
 class GradeSerializer(serializers.ModelSerializer):
