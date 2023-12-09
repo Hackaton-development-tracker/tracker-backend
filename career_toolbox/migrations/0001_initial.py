@@ -101,9 +101,9 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=255, verbose_name='Название специальности')),
                 ('description', models.TextField(verbose_name='Описание специальности')),
-                ('grades', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='specialization_grade', to='career_toolbox.grade', verbose_name='Грейды')),
+                ('grades', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='specialization_grade', to='career_toolbox.grade', verbose_name='Грейды')),
                 ('knowledgebase', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='specialization_base', to='career_toolbox.knowledgebase', verbose_name='База знаний по специальности')),
-                ('skills', models.ManyToManyField(blank=True, null=True, related_name='specialization_skills', to='career_toolbox.skill', verbose_name='Навыки по специализациям')),
+                ('skills', models.ManyToManyField(related_name='specialization_skills', to='career_toolbox.skill', verbose_name='Навыки по специализациям')),
             ],
             options={
                 'verbose_name': 'Специальность',
