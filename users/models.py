@@ -87,10 +87,15 @@ class User(AbstractUser):
         blank=True
 
     )
-    last_evaluation_date = models.DateField(
+    test_date = models.DateTimeField(
         null=True,
         blank=True,
-        verbose_name='Дата последней оценки'
+        verbose_name='Дата последнего прохождения теста'
+    )
+    next_test_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Тест недоступен до'
     )
 
     USERNAME_FIELD = 'email'

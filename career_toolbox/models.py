@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Project(models.Model):
-    """Таблица с проектами пользователей."""
+    """Таблица с проектами."""
 
     title = models.CharField(
         max_length=255,
@@ -215,9 +215,6 @@ class Skill(models.Model):
         verbose_name='Уровень навыка',
         null=True,
         blank=True
-    )
-    description_level = models.TextField(
-        verbose_name='Описание навыка'
     )
 
     class Meta:
