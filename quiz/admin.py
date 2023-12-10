@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from .models import AnswerTest, QuestionTest
 
 
@@ -14,10 +15,9 @@ class QuestionTestAdmin(admin.ModelAdmin):
 @admin.register(AnswerTest)
 class AnswerTestAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'questions',
         'answer',
         'point_answer',
-        'specializtion',
-        'grade',
     )
     list_filter = ('questions',)

@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from . import models
 
 
@@ -15,6 +16,12 @@ class ExternalResourceAdmin(admin.ModelAdmin):
     search_fields = ('title',)
 
 
+@admin.register(models.Level)
+class LevelAdmin(admin.ModelAdmin):
+    list_display = ('level', 'description_level')
+    search_fields = ('level',)
+
+
 @admin.register(models.Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'start_date', 'end_date')
@@ -23,7 +30,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(models.Specialization)
 class SpecializationAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description')
+    list_display = ('id', 'title', 'description')
     search_fields = ('title',)
 
 

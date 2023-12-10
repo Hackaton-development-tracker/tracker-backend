@@ -119,11 +119,6 @@ class Specialization(models.Model):
     description = models.TextField(
         verbose_name='Описание специальности'
     )
-    grades = models.ManyToManyField(
-        'career_toolbox.Grade',
-        verbose_name='Грейды',
-        related_name='specialization_grade',
-    )
     skills = models.ManyToManyField(
         'career_toolbox.Skill',
         verbose_name='Навыки по специализациям',
@@ -168,6 +163,23 @@ class Grade(models.Model):
         return self.title
 
 
+class Level(models.Model):
+    level = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name='Уровень навыка'
+    )
+    description_level = models.TextField(
+        verbose_name='Описание навыка'
+    )
+
+    class Meta:
+        verbose_name = 'Уровень'
+        verbose_name_plural = 'Уровни'
+
+    def __str__(self):
+        return str(self.level)
+
+
 class Skill(models.Model):
     """Таблица с навыками."""
 
@@ -185,26 +197,27 @@ class Skill(models.Model):
         null=True,
         blank=True
     )
-    level = models.CharField(
-        max_length=255,
-        verbose_name='Уровень навыка'
-    )
-    rating = models.IntegerField(
-        verbose_name='Оценка навыка'
-    )
-    tests = models.OneToOneField(
+    tests = models.ManyToManyField(
         'quiz.QuestionTest',
-        on_delete=models.SET_NULL,
         verbose_name='Тесты по навыкам специализации',
         related_name='skill_test',
-        blank=True,
-        null=True
+        blank=True
     )
     base = models.ManyToManyField(
         'career_toolbox.KnowledgeBase',
         related_name='skill_knowledgebase',
         verbose_name='Документы из базы знаний',
         blank=True
+    )
+    level = models.ForeignKey(
+        Level,
+        on_delete=models.SET_NULL,
+        verbose_name='Уровень навыка',
+        null=True,
+        blank=True
+    )
+    description_level = models.TextField(
+        verbose_name='Описание навыка'
     )
 
     class Meta:

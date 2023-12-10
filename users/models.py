@@ -35,6 +35,24 @@ class MyUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
+class UserSkill(models.Model):
+    user = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='user_skills',
+        verbose_name='Пользователь'
+    )
+    skill = models.ForeignKey(
+        'career_toolbox.Skill',
+        on_delete=models.CASCADE,
+        verbose_name='Навык'
+    )
+    level = models.IntegerField(
+        default=0,
+        verbose_name='Уровень навыка'
+    )
+
+
 class User(AbstractUser):
     """
     Кастомная модель пользователя.
@@ -46,13 +64,6 @@ class User(AbstractUser):
         blank=False,
         unique=True
     )
-    first_name = models.CharField('Имя', max_length=150, blank=False)
-    last_name = models.CharField('Фамилия', max_length=150, blank=False)
-    skills = models.ManyToManyField(
-        'career_toolbox.Skill',
-        related_name='user_skills',
-        verbose_name='Навыки пользователя'
-    )
     grades = models.ManyToManyField(
         'career_toolbox.Grade',
         related_name='user_grades',
@@ -63,10 +74,18 @@ class User(AbstractUser):
         related_name='user_specializations',
         verbose_name='Специализации пользователя'
     )
+    skills = models.ManyToManyField(
+        'career_toolbox.Skill',
+        through=UserSkill,
+        related_name='users',
+        verbose_name='Навыки пользователя'
+    )
     course = models.ManyToManyField(
         'career_toolbox.Course',
         related_name='user_course',
-        verbose_name='Курсы пользователя'
+        verbose_name='Курсы пользователя',
+        blank=True
+
     )
     last_evaluation_date = models.DateField(
         null=True,
