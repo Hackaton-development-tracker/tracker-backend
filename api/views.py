@@ -1,14 +1,69 @@
+from datetime import timedelta
+
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from djoser.views import UserViewSet
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from api.serializers import (CustomUserSerializer, QuestionTestSerializer,
-                             SpecializationSerializer)
-from career_toolbox.models import Grade, Specialization
+from api.serializers import (CourseSerializer, CustomUserSerializer,
+                             KnowledgeBaseSerializer, ProjectSerializer,
+                             QuestionTestSerializer, SpecializationSerializer,
+                             UserSkillSerializer)
+from career_toolbox.models import (Course, Grade, KnowledgeBase, Project,
+                                   Specialization)
 from quiz.models import AnswerTest, QuestionTest
 from users.models import User, UserSkill
+
+
+class UserSkillViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Вьюсет для модели UserSkill.
+    """
+    serializer_class = UserSkillSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return UserSkill.objects.filter(user=user)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        user = self.request.user
+        user_grade = user.grades.first().title
+
+        skills_lists = {}
+
+        for level in range(1, 4):
+            skills_lists[level] = []
+
+        for user_skill in queryset:
+            if user_skill.level in skills_lists:
+                skills_lists[user_skill.level].append(
+                    UserSkillSerializer(user_skill).data
+                )
+
+        skills_to_improve = []
+        achieved_skills = []
+
+        if user_grade == 'junior':
+            skills_to_improve.extend(skills_lists[1])
+            achieved_skills.extend(skills_lists[2] + skills_lists[3])
+        elif user_grade == 'middle':
+            skills_to_improve.extend(skills_lists[2])
+            achieved_skills.extend(skills_lists[1] + skills_lists[3])
+        elif user_grade == 'senior':
+            achieved_skills.extend(
+                skills_lists[1] + skills_lists[2] + skills_lists[3]
+            )
+
+        result_data = {
+            "skillsToImprove": skills_to_improve,
+            "achievedSkills": achieved_skills,
+        }
+
+        return Response(result_data)
 
 
 class CustomUserViewSet(UserViewSet):
@@ -17,6 +72,48 @@ class CustomUserViewSet(UserViewSet):
     """
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
+
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для модели Project.
+    """
+    serializer_class = ProjectSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        user_specializations = user.specializations.all()
+        return Project.objects.filter(
+            specializations__in=user_specializations
+        ).distinct()
+
+
+class KnowledgeBaseViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для модели KnowledgeBase.
+    """
+    serializer_class = KnowledgeBaseSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        user_skills = user.skills.all()
+        return KnowledgeBase.objects.filter(
+            skills__in=user_skills
+        ).distinct()
+
+
+class CourseViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для модели Course.
+    """
+    serializer_class = CourseSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        user_specializations = user.specializations.all()
+        return Course.objects.filter(
+            specializations__in=user_specializations
+        )
 
 
 class SpecializationViewSet(viewsets.ModelViewSet):
@@ -45,6 +142,9 @@ class SpecializationViewSet(viewsets.ModelViewSet):
 
 
 class TestViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для теста.
+    """
     queryset = QuestionTest.objects.all()
     serializer_class = QuestionTestSerializer
 
@@ -53,6 +153,18 @@ class TestViewSet(viewsets.ModelViewSet):
         """
         Прохождение теста и обновление данных юзера.
         """
+        user = self.request.user
+
+        if (user.next_test_date is not None and
+                user.next_test_date > timezone.now()):
+            time_until_available = user.next_test_date - timezone.now()
+            hours, remainder = divmod(time_until_available.total_seconds(),
+                                      3600)
+            minutes, seconds = divmod(remainder, 60)
+
+            return Response({'message': f'Время прохождения теста еще не'
+                             f'наступило. Тест будет доступен через '
+                             f'{int(hours)}:{int(minutes)}:{int(seconds)}.'})
         specialization_id = request.data.get('specialization_id')
         if specialization_id:
             specialization = get_object_or_404(Specialization,
@@ -80,13 +192,18 @@ class TestViewSet(viewsets.ModelViewSet):
                         answer_obj.get_float_point_answer()
                     )
             # Обновление уровней навыков пользователя и их подсчет
-            user = self.request.user
             for skill, total_points in total_points_by_skill.items():
                 self.calculate_skill_level(total_points)
                 self.update_user_skills(user, skill, total_points)
 
             # Обновление информации о грейде после обновления навыков
             grade_info = self.update_user_grade(user)
+
+            # Обновление даты прохождения теста и даты следующей сдачи
+            user.test_date = timezone.now()
+            unavailable_period = timedelta(days=14)
+            user.next_test_date = (user.test_date + unavailable_period)
+            user.save()
 
         return Response({'grade_info': grade_info})
 
