@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from djoser.views import UserViewSet
@@ -47,13 +48,13 @@ class UserSkillViewSet(viewsets.ReadOnlyModelViewSet):
         skills_to_improve = []
         achieved_skills = []
 
-        if user_grade == 'junior':
+        if user_grade == settings.JUNIOR_GRADE:
             skills_to_improve.extend(skills_lists[1])
             achieved_skills.extend(skills_lists[2] + skills_lists[3])
-        elif user_grade == 'middle':
+        elif user_grade == settings.MIDLE_GRADE:
             skills_to_improve.extend(skills_lists[2])
             achieved_skills.extend(skills_lists[1] + skills_lists[3])
-        elif user_grade == 'senior':
+        elif user_grade == settings.SENIOR_GRADE:
             achieved_skills.extend(
                 skills_lists[1] + skills_lists[2] + skills_lists[3]
             )
@@ -236,9 +237,9 @@ class TestViewSet(viewsets.ModelViewSet):
         """
         user.grades.clear()
         user_skills = UserSkill.objects.filter(user=user)
-        junior_grade = Grade.objects.get(title='junior')
-        middle_grade = Grade.objects.get(title='middle')
-        senior_grade = Grade.objects.get(title='senior')
+        junior_grade = Grade.objects.get(title=settings.JUNIOR_GRADE)
+        middle_grade = Grade.objects.get(title=settings.MIDLE_GRADE)
+        senior_grade = Grade.objects.get(title=settings.SENIOR_GRADE)
 
         skills_max = user_skills.count()
         if any(user_skill.level == 1 for user_skill in user_skills):
@@ -252,11 +253,11 @@ class TestViewSet(viewsets.ModelViewSet):
             next_grade = None
 
         grade = user.grades.first().title
-        if grade == 'junior':
+        if grade == settings.JUNIOR_GRADE:
             skills_current = sum(
                 1 for skill in user_skills if skill.level == 1
             )
-        if grade == 'middle':
+        if grade == settings.MIDLE_GRADE:
             skills_current = sum(
                 1 for skill in user_skills if skill.level == 2
             )

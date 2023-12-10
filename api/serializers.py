@@ -1,3 +1,4 @@
+from django.conf import settings
 from djoser.serializers import UserSerializer
 from rest_framework import serializers
 
@@ -89,11 +90,11 @@ class CustomUserSerializer(UserSerializer):
         last_added_grade = current_grades.last()
 
         if last_added_grade is None:
-            next_grade_title = 'junior'
-        elif last_added_grade.title == 'junior':
-            next_grade_title = 'middle'
-        elif last_added_grade.title == 'middle':
-            next_grade_title = 'senior'
+            next_grade_title = settings.JUNIOR_GRADE
+        elif last_added_grade.title == settings.JUNIOR_GRADE:
+            next_grade_title = settings.MIDLE_GRADE
+        elif last_added_grade.title == settings.MIDLE_GRADE:
+            next_grade_title = settings.SENIOR_GRADE
         else:
             return None
 

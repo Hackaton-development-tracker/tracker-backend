@@ -28,3 +28,8 @@ include('components/localization.py')
 include('components/auth_pass_validators.py')
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+JUNIOR_GRADE = 'Джуниор'
+MIDLE_GRADE = 'Мидл'
+SENIOR_GRADE = 'Сеньор'
