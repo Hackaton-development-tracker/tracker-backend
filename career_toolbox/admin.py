@@ -14,6 +14,11 @@ class ExternalResourceAdmin(admin.ModelAdmin):
     search_fields = ('title',)
 
 
+class LevelAdmin(admin.ModelAdmin):
+    list_display = ('level', 'description_level')
+    search_fields = ('level',)
+
+
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'start_date', 'end_date')
     search_fields = ('title',)
@@ -47,6 +52,7 @@ model_admin_mapping = {
     models.Grade: GradeAdmin,
     models.Skill: SkillAdmin,
     models.KnowledgeBase: KnowledgeBaseAdmin,
+    models.Level: LevelAdmin,
 }
 
 for model, admin_class in model_admin_mapping.items():

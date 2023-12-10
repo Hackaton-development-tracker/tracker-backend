@@ -163,6 +163,23 @@ class Grade(models.Model):
         return self.title
 
 
+class Level(models.Model):
+    level = models.PositiveSmallIntegerField(
+        default=0,
+        verbose_name='Уровень навыка'
+    )
+    description_level = models.TextField(
+        verbose_name='Описание навыка'
+    )
+
+    class Meta:
+        verbose_name = 'Уровень'
+        verbose_name_plural = 'Уровни'
+
+    def __str__(self):
+        return str(self.level)
+
+
 class Skill(models.Model):
     """Таблица с навыками."""
 
@@ -191,6 +208,16 @@ class Skill(models.Model):
         related_name='skill_knowledgebase',
         verbose_name='Документы из базы знаний',
         blank=True
+    )
+    level = models.ForeignKey(
+        Level,
+        on_delete=models.SET_NULL,
+        verbose_name='Уровень навыка',
+        null=True,
+        blank=True
+    )
+    description_level = models.TextField(
+        verbose_name='Описание навыка'
     )
 
     class Meta:

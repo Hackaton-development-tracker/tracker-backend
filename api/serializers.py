@@ -41,7 +41,7 @@ class QuestionTestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuestionTest
-        fields = ['id', 'question', 'answers']
+        fields = ['id', 'question',  'param', 'answers']
 
 
 class TakeTestSerializer(serializers.Serializer):

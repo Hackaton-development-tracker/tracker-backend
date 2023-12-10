@@ -2,6 +2,11 @@ from django.db import models
 
 
 class QuestionTest(models.Model):
+    QUESTION_TYPE_CHOICES = [
+        ('one', 'Один вариант ответа'),
+        ('several', 'Несколько вариантов ответа'),
+    ]
+
     question = models.TextField(
         verbose_name='Вопрос'
     )
@@ -11,6 +16,11 @@ class QuestionTest(models.Model):
         verbose_name='Навык для тестирования',
         related_name='test_skill',
         null=True
+    )
+    param = models.CharField(
+        max_length=10,
+        choices=QUESTION_TYPE_CHOICES,
+        verbose_name='Тип вопроса'
     )
 
     class Meta:

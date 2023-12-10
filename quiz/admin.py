@@ -15,6 +15,7 @@ class QuestionTestAdmin(admin.ModelAdmin):
 @admin.register(AnswerTest)
 class AnswerTestAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'questions',
         'answer',
         'point_answer',
