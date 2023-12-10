@@ -119,7 +119,7 @@ class SkillSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Skill
-        fields = ('id', 'title', 'description', 'level')
+        fields = ('id', 'title', 'description')
 
 
 class UserSkillSerializer(serializers.ModelSerializer):
@@ -128,13 +128,12 @@ class UserSkillSerializer(serializers.ModelSerializer):
     current_level = serializers.SerializerMethodField()
     target_level = serializers.SerializerMethodField()
     total_levels = serializers.SerializerMethodField()
-    description = serializers.SerializerMethodField()
     levels_description = serializers.SerializerMethodField()
 
     class Meta:
         model = UserSkill
         fields = ('id', 'skill', 'current_level', 'target_level',
-                  'total_levels', 'description', 'levels_description')
+                  'total_levels', 'levels_description')
 
     def get_current_level(self, obj):
         return obj.level if obj.level else None
@@ -144,9 +143,6 @@ class UserSkillSerializer(serializers.ModelSerializer):
 
     def get_total_levels(self, obj):
         return Level.objects.count()
-
-    def get_description(self, obj):
-        return obj.skill.description if obj.skill else None
 
     def get_levels_description(self, obj):
         return {
