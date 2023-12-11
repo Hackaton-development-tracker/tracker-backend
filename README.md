@@ -109,6 +109,10 @@ sudo docker run -p 8000:8000 -d --name <container name> <image name>
 **swagger** - `http://localhost:8000/swagger/`  
 **redoc** - `http://localhost:8000/redoc/`
 
+### Заполнение бд
+Для грейдов обязательные названия **Джуниор** **Мидл** **Сеньор**.
+Остальныые данные заполняются по своему усмотрению.
+
 ## Сервис разрабатывали:
 <details>
 <summary>
