@@ -16,6 +16,7 @@ from career_toolbox.models import (Course, Grade, KnowledgeBase, Project,
                                    Specialization)
 from quiz.models import AnswerTest, QuestionTest
 from users.models import User, UserSkill
+from .utils import is_test_available_for_user
 
 
 class UserSkillViewSet(viewsets.ReadOnlyModelViewSet):
@@ -114,7 +115,7 @@ class CourseViewSet(viewsets.ModelViewSet):
         user_specializations = user.specializations.all()
         return Course.objects.filter(
             specializations__in=user_specializations
-        )
+        ).distinct()
 
 
 class SpecializationViewSet(viewsets.ModelViewSet):
@@ -156,16 +157,11 @@ class TestViewSet(viewsets.ModelViewSet):
         """
         user = self.request.user
 
-        if (user.next_test_date is not None and
-                user.next_test_date > timezone.now()):
-            time_until_available = user.next_test_date - timezone.now()
-            hours, remainder = divmod(time_until_available.total_seconds(),
-                                      3600)
-            minutes, seconds = divmod(remainder, 60)
+        test_availability_response = is_test_available_for_user(request, user)
 
-            return Response({'message': f'Время прохождения теста еще не'
-                             f'наступило. Тест будет доступен через '
-                             f'{int(hours)}:{int(minutes)}:{int(seconds)}.'})
+        if test_availability_response:
+            return Response({'message': test_availability_response},
+                            status=status.HTTP_400_BAD_REQUEST)
         specialization_id = request.data.get('specialization_id')
         if specialization_id:
             specialization = get_object_or_404(Specialization,
@@ -232,7 +228,7 @@ class TestViewSet(viewsets.ModelViewSet):
 
     def update_user_grade(self, user):
         """
-        Обновление греда юзера, подсчет общего количества навыков юзера и
+        Обновление грейда юзера, подсчет общего количества навыков юзера и
         необходимых навыков для улучшения.
         """
         user.grades.clear()

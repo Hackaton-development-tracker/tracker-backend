@@ -1,10 +1,11 @@
 from django.conf import settings
 from djoser.serializers import UserSerializer
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
 
 from career_toolbox.models import (Course, ExternalResource, Grade,
                                    KnowledgeBase, Level, Project, Skill,
-                                   Specialization)
+                                   Specialization, Tag)
 from quiz.models import AnswerTest, QuestionTest
 from users.models import User, UserSkill
 
@@ -13,9 +14,20 @@ class ProjectSerializer(serializers.ModelSerializer):
     """
     Сериализатор проектов.
     """
+    image = Base64ImageField()
 
     class Meta:
         model = Project
+        fields = '__all__'
+
+
+class TagSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор тегов.
+    """
+
+    class Meta:
+        model = Tag
         fields = '__all__'
 
 
@@ -23,6 +35,7 @@ class KnowledgeBaseSerializer(serializers.ModelSerializer):
     """
     Сериализатор базы знаний.
     """
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = KnowledgeBase
@@ -44,11 +57,12 @@ class CourseSerializer(serializers.ModelSerializer):
     Сериализатор курсов.
     """
     resource = ExternalResourceSerializer()
+    image = Base64ImageField()
 
     class Meta:
         model = Course
         fields = ('id', 'title', 'description', 'start_date', 'end_date',
-                  'resource')
+                  'resource', 'image')
 
 
 class SpecializationSerializer(serializers.ModelSerializer):

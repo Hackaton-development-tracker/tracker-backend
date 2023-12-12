@@ -2,6 +2,7 @@ from django.db import models
 
 
 class QuestionTest(models.Model):
+    """Таблица с вопросами."""
     QUESTION_TYPE_CHOICES = [
         ('one', 'Один вариант ответа'),
         ('several', 'Несколько вариантов ответа'),
@@ -32,6 +33,7 @@ class QuestionTest(models.Model):
 
 
 class AnswerTest(models.Model):
+    """Таблица с ответами на вопросы."""
     class PointsAnswerChoices(models.TextChoices):
         Variant_1 = 'V1', '0'
         Variant_2 = 'V2', '3'

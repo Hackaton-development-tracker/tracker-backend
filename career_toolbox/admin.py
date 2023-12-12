@@ -50,3 +50,9 @@ class SkillAdmin(admin.ModelAdmin):
 class KnowledgeBaseAdmin(admin.ModelAdmin):
     list_display = ('theme', 'description', 'author')
     search_fields = ('theme',)
+
+
+@admin.register(models.Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+    search_fields = ('name',)

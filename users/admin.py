@@ -16,4 +16,4 @@ class CustomUserAdmin(admin.ModelAdmin):
 
 @admin.register(UserSkill)
 class UserSkillAdmin(admin.ModelAdmin):
-    list_display = ('skill', 'level')
+    list_display = ('user', 'skill', 'level')
