@@ -2,6 +2,9 @@ from django.utils import timezone
 
 
 def format_time_until_available(time_until_available):
+    """
+    Форматирует время до доступности теста.
+    """
     days = time_until_available.days
     hours, remainder = divmod(time_until_available.seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
@@ -15,6 +18,10 @@ def format_time_until_available(time_until_available):
 
 
 def is_test_available_for_user(request, user):
+    """
+    Проверяет доступность теста для указанного пользователя и возвращает время
+    через которое тест снова будет доступен.
+    """
     user = request.user
 
     if (user.next_test_date is not None and
