@@ -3,7 +3,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 WSGI_APPLICATION = 'tracker_app.wsgi.application'
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR/'tracker_app/static'
+STATIC_ROOT = BASE_DIR / 'tracker_app/static'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INSTALLED_APPS = [
     'django.contrib.admin',
