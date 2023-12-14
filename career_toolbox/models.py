@@ -30,9 +30,9 @@ class Project(models.Model):
         verbose_name='Специализации',
         related_name='project_specializtion'
     )
-    image = models.ImageField(
-        verbose_name='Изображение',
-        upload_to='projects/'
+    file = models.FileField(
+        upload_to='projects/',
+        verbose_name='Файл'
     )
 
     class Meta:
@@ -95,9 +95,9 @@ class Course(models.Model):
         verbose_name='Внешний ресурс где размещен курс',
         blank=True
     )
-    image = models.ImageField(
-        verbose_name='Изображение',
-        upload_to='courses/'
+    file = models.FileField(
+        upload_to='courses/',
+        verbose_name='Файл'
     )
 
     class Meta:
