@@ -16,6 +16,7 @@ from career_toolbox.models import (Course, Grade, KnowledgeBase, Project,
                                    Specialization)
 from quiz.models import AnswerTest, QuestionTest
 from users.models import User, UserSkill
+
 from .utils import is_test_available_for_user
 
 
