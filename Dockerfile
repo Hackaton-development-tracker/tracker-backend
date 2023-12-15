@@ -1,21 +1,22 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
+ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-RUN useradd -m -r -u 100 user
+RUN useradd -m -r -u 101 user
 
-COPY requirements.production.txt /app/requirements.txt
+COPY requirements.txt /app/
 
-# Зависимости для компиляции
 RUN apt-get update \
     && apt-get install -y gcc python3-dev \
     && apt-get install -y postgresql postgresql-contrib libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip && \
+RUN chown -R user:user /app && \
+    pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["gunicorn", "tracker_app.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "tracker_app.wsgi:application", "--bind", "0:8000"]
