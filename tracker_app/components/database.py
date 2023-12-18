@@ -22,7 +22,7 @@ elif ENVIRONMENT == 'production':
             'NAME': config('DB_NAME'),
             'USER': config('DB_USER'),
             'PASSWORD': config('DB_PASSWORD'),
-            'HOST': 'localhost',
+            'HOST': 'db',
             'PORT': config('DB_PORT', 5432),
         }
     }

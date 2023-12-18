@@ -158,3 +158,6 @@ docker-compose.override.yml
 
 # Images
 .media/
+
+# Images
+.media/

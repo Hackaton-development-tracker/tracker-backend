@@ -63,51 +63,34 @@
 > ```
 > git clone gh repo clone Hackaton-development-tracker/tracker-backend
 > ```
-#### Боевой режим (PostgtreSQL):
+#### Запуск сервиса
 1. В корневой дирректории создать файл с переменными окружения `.env` и наполнить его по шаблону:
 ```
-DB_NAME=tracker_db
-DB_USER=admin
-DB_PASSWORD=admin
-DB_PORT=5432
-ENVIRONMENT=production
+DB_NAME=<your name database>
+DB_USER=<your name>
+DB_PASSWORD=<your password>
+DB_PORT=<yout port>
+ENVIRONMENT=<production OR testing>    # testing use sqlite, pruduction use PostgreSQL
 ```
 2. Из корневой дирректории запустить сборку приложения:
 ```bash
-sudo docker-compose up -d --build
+sudo docker-compose up -d
+```
+3. Запустить сборку статики и применение миграций
+```bash
+sudo docker-compose exec backend bash start.sh
 ```
 3. Создать учетную запись администратора
 ```bash
-sudo docker-compose exec app python manage.py createsuperuser
+sudo docker-compose exec backend python manage.py createsuperuser
 ```
-4. Сервис будет доступен по адресу `http://<ip remote server>:8000/admin/`
-
-#### Режим тестирования (SQLite):
-1. В корневой дирректории создать файл с переменными окружения `.env` и наполнить его по шаблону:
-```
-DB_NAME=tracker_db
-DB_USER=admin
-DB_PASSWORD=admin
-DB_PORT=5432
-ENVIRONMENT=testing
-```
-2. Из корневой дирректории с файлом Dockerfile запустить сборку образа Docker:
-> <span style="color:#1E90FF">**Note:**</span> <span style="color:#FFFF00">**В режиме тестирования сборка ведется на основе Dockerfile.testing без поддержки psycopg2 для PostgreSQL**</span>
-```bash
-sudo docker build -t <app name> -f Dockerfile.testing . 
-```
-1. Запустить контейнер с приложением командой:
-```bash
-sudo docker run -p 8000:8000 -d --name <container name> <image name> 
-```
-1. Сервис будет доступен по адресу `http://localhost:8000/admin/`
 
 ### Документация
 
 Доступна после запуска сервиса:
 
-**swagger** - `http://localhost:8000/swagger/`  
-**redoc** - `http://localhost:8000/redoc/`
+**swagger** - `http://<localhost OR ip remote host mashine>/swagger/`  
+**redoc** - `http://<localhost OR ip remote host mashine>/redoc/`
 
 ### Заполнение бд
 Для грейдов обязательные названия **Джуниор**, **Мидл**, **Сеньор**.
