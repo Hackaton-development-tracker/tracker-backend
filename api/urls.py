@@ -14,8 +14,8 @@ router_v1.register('specialization', SpecializationViewSet,
 router_v1.register('tests', TestViewSet, basename='test')
 router_v1.register('courses', CourseViewSet, basename='course')
 router_v1.register('user_skills', UserSkillViewSet, basename='user_skills')
-router_v1.register('knoweledge', KnowledgeBaseViewSet, basename='knoweledge')
-router_v1.register('project', ProjectViewSet, basename='project')
+router_v1.register('knowledges', KnowledgeBaseViewSet, basename='knowledges')
+router_v1.register('projects', ProjectViewSet, basename='projects')
 
 
 urlpatterns = [

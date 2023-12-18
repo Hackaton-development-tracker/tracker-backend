@@ -156,3 +156,8 @@ cython_debug/
 # Docker
 docker-compose.override.yml
 
+# Images
+.media/
+
+# Images
+.media/

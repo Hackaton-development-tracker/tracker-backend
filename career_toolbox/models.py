@@ -23,13 +23,16 @@ class Project(models.Model):
         'career_toolbox.ExternalResource',
         on_delete=models.CASCADE,
         verbose_name='Ссылки на внешние ресурсы',
-        related_name='resourse_projects',
-        blank=True
+        related_name='resourse_projects'
     )
     specializations = models.ManyToManyField(
         'career_toolbox.Specialization',
         verbose_name='Специализации',
         related_name='project_specializtion'
+    )
+    file = models.FileField(
+        upload_to='projects/',
+        verbose_name='Файл'
     )
 
     class Meta:
@@ -63,7 +66,7 @@ class ExternalResource(models.Model):
 
 
 class Course(models.Model):
-    """Таблица с курсами пользователей."""
+    """Таблица с курсами."""
 
     title = models.CharField(
         max_length=255,
@@ -80,18 +83,10 @@ class Course(models.Model):
         null=True,
         blank=True
     )
-    specializations = models.ForeignKey(
+    specializations = models.ManyToManyField(
         'career_toolbox.Specialization',
-        on_delete=models.SET_NULL,
-        null=True,
         verbose_name='Специальности',
         related_name='course_specialization'
-    )
-    grades = models.ForeignKey(
-        'career_toolbox.Grade',
-        on_delete=models.CASCADE,
-        verbose_name='Грейды',
-        related_name='course_grade'
     )
     resource = models.ForeignKey(
         'career_toolbox.ExternalResource',
@@ -99,6 +94,10 @@ class Course(models.Model):
         null=True,
         verbose_name='Внешний ресурс где размещен курс',
         blank=True
+    )
+    file = models.FileField(
+        upload_to='courses/',
+        verbose_name='Файл'
     )
 
     class Meta:
@@ -123,14 +122,6 @@ class Specialization(models.Model):
         'career_toolbox.Skill',
         verbose_name='Навыки по специализациям',
         related_name='specialization_skills'
-    )
-    knowledgebase = models.ForeignKey(
-        'career_toolbox.KnowledgeBase',
-        on_delete=models.SET_NULL,
-        verbose_name='База знаний по специальности',
-        related_name='specialization_base',
-        null=True,
-        blank=True
     )
 
     class Meta:
@@ -164,6 +155,7 @@ class Grade(models.Model):
 
 
 class Level(models.Model):
+    """Таблица с уровнями для навыков."""
     level = models.PositiveSmallIntegerField(
         default=0,
         verbose_name='Уровень навыка'
@@ -189,13 +181,6 @@ class Skill(models.Model):
     )
     description = models.TextField(
         verbose_name='Описание навыка'
-    )
-    resources = models.ForeignKey(
-        'career_toolbox.ExternalResource',
-        on_delete=models.CASCADE,
-        verbose_name='Ссылки на внешние ресурсы',
-        null=True,
-        blank=True
     )
     tests = models.ManyToManyField(
         'quiz.QuestionTest',
@@ -225,12 +210,36 @@ class Skill(models.Model):
         return self.title
 
 
+class Tag(models.Model):
+    """Таблица с тегами."""
+    name = models.CharField(
+        max_length=255,
+        verbose_name='Название тега'
+    )
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+    def __str__(self):
+        return self.name
+
+
 class KnowledgeBase(models.Model):
     """Таблица с базой знаний."""
 
     theme = models.CharField(
         max_length=255,
         verbose_name='Тема'
+    )
+    type = models.CharField(
+        max_length=150,
+        verbose_name='Тип'
+    )
+    tags = models.ManyToManyField(
+        'career_toolbox.Tag',
+        related_name='knowledgebase_tags',
+        verbose_name='Теги'
     )
     description = models.TextField(
         verbose_name='Описание'

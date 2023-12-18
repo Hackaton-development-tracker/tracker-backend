@@ -1,10 +1,12 @@
+import math
+
 from django.conf import settings
 from djoser.serializers import UserSerializer
 from rest_framework import serializers
 
 from career_toolbox.models import (Course, ExternalResource, Grade,
                                    KnowledgeBase, Level, Project, Skill,
-                                   Specialization)
+                                   Specialization, Tag)
 from quiz.models import AnswerTest, QuestionTest
 from users.models import User, UserSkill
 
@@ -13,9 +15,20 @@ class ProjectSerializer(serializers.ModelSerializer):
     """
     Сериализатор проектов.
     """
+    file = serializers.FileField()
 
     class Meta:
         model = Project
+        fields = '__all__'
+
+
+class TagSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор тегов.
+    """
+
+    class Meta:
+        model = Tag
         fields = '__all__'
 
 
@@ -23,6 +36,7 @@ class KnowledgeBaseSerializer(serializers.ModelSerializer):
     """
     Сериализатор базы знаний.
     """
+    tags = TagSerializer(many=True)
 
     class Meta:
         model = KnowledgeBase
@@ -44,11 +58,25 @@ class CourseSerializer(serializers.ModelSerializer):
     Сериализатор курсов.
     """
     resource = ExternalResourceSerializer()
+    file = serializers.FileField()
+    completion_time = serializers.SerializerMethodField()
 
     class Meta:
         model = Course
         fields = ('id', 'title', 'description', 'start_date', 'end_date',
-                  'resource')
+                  'completion_time', 'resource', 'file')
+
+    def get_completion_time(self, obj):
+        """
+        Возвращает среднее кол-во часов которые нужно потратить на прохождение
+        курса.
+        """
+        if obj.start_date and obj.end_date:
+            duration = obj.end_date - obj.start_date
+            total_hours = math.ceil(duration.days * 1.75)
+            return total_hours
+        else:
+            return None
 
 
 class SpecializationSerializer(serializers.ModelSerializer):
@@ -85,6 +113,9 @@ class CustomUserSerializer(UserSerializer):
                   'test_date', 'next_test_date')
 
     def get_next_grade(self, user):
+        """
+        Возвращает следующий грейд после текущего у юзера.
+        """
         current_grades = user.grades.all()
 
         last_added_grade = current_grades.last()
@@ -123,7 +154,9 @@ class SkillSerializer(serializers.ModelSerializer):
 
 
 class UserSkillSerializer(serializers.ModelSerializer):
-    """Сериализатор специальностей."""
+    """
+    Сериализатор специальностей.
+    """
     skill = SkillSerializer()
     current_level = serializers.SerializerMethodField()
     target_level = serializers.SerializerMethodField()
@@ -136,15 +169,27 @@ class UserSkillSerializer(serializers.ModelSerializer):
                   'total_levels', 'levels_description')
 
     def get_current_level(self, obj):
+        """
+        Возвращает текущий уровень навыка.
+        """
         return obj.level if obj.level else None
 
     def get_target_level(self, obj):
+        """
+        Возвращает следующий уровень после текущиего.
+        """
         return obj.level + 1 if obj.level else None
 
     def get_total_levels(self, obj):
+        """
+        Возвращает кол-во уровней.
+        """
         return Level.objects.count()
 
     def get_levels_description(self, obj):
+        """
+        Возвращает описание уровней.
+        """
         return {
             str(level.level): level.description_level
             for level in Level.objects.all()
